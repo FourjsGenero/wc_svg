@@ -1,0 +1,23 @@
+LAYOUT
+VBOX
+GRID
+{
+[f01               ]
+[                  ]
+[                  ]
+[                  ]
+<T                 >
+ [c01     |c02    ]
+ [c01     |c02    ]
+ [c01     |c02    ]
+}
+END
+END
+ATTRIBUTES
+WEBCOMPONENT f01 = formonly.pie_chart, COMPONENTTYPE="wc_svg";
+c01 = formonly.major;
+c02 = formonly.qty, JUSTIFY=RIGHT;
+PHANTOM formonly.colour;
+
+INSTRUCTIONS
+SCREEN RECORD scr(major, qty, colour);
