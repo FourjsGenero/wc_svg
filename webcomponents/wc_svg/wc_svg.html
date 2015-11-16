@@ -22,6 +22,8 @@
             gICAPI.Action(action);    
          }
 
+       
+
          // This function is called by the Genero Client Container
          // so the web component can initialize itself and initialize
          // the gICAPI handlers
@@ -58,6 +60,17 @@
                 document.getElementById(id).innerHTML=value;
             }
 
+            getWidth = function() {
+                return document.body.clientWidth;
+            }
+            getHeight = function() {
+                return document.body.clientHeight;
+            }
+
+            bodyresize = function() {
+                gICAPI.Action("resize");
+            }
+
             // When the user click on the document we ask the DVM to
             // get the focus
             askFocus = function() {
@@ -66,7 +79,7 @@
          }
       </script>
    </head>
-    <body>
+    <body onresize="bodyresize()">
       <div id="svg">
       </div>
     </body>

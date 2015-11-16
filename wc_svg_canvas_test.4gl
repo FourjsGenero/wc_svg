@@ -14,10 +14,14 @@ IMPORT FGL wc_svg
 
 
 FUNCTION test_wc_svg_canvas()
+DEFINE result INTEGER
   CALL drawInit()
   OPEN WINDOW canvas WITH FORM "wc_svg_canvas_test"
   CALL drawAll()
   MENU "Test"
+    ON ACTION resize
+        CALL drawall()
+   
     COMMAND KEY(f5) 
       DISPLAY "blue, left" TO action
     COMMAND KEY(f6) 

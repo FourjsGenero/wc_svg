@@ -1,4 +1,5 @@
 IMPORT FGL wc_svg
+IMPORT util
 
 PRIVATE  DEFINE doc om.DomDocument
 PRIVATE  DEFINE root om.DomNode
@@ -8,6 +9,8 @@ PRIVATE  DEFINE linesAreBlack INTEGER
 PRIVATE  DEFINE anchor String
 PRIVATE  DEFINE trans INTEGER
 PRIVATE  DEFINE lineWidth INTEGER
+
+PRIVATE DEFINE m_line_multiplier FLOAT
 
 FUNCTION canvas_to_svg(l_canvas)
 DEFINE l_canvas om.DomNode
@@ -19,6 +22,8 @@ DEFINE l_stroke wc_svg.strokeType
 
 DEFINE l_background wc_svg.svg_object
 
+DEFINE l_width, l_height INTEGER
+
     IF l_canvas IS NULL THEN
         RETURN NULL
     END IF
@@ -26,6 +31,16 @@ DEFINE l_background wc_svg.svg_object
     IF l_tagname = "Canvas" THEN
         LET l_svg = wc_svg.init()
         CALL wc_svg.svg_viewBox(l_svg, 0, 0, 1000, 1000)
+
+         
+        CALL ui.Interface.frontCall("webcomponent","call",["formonly.c1","getWidth"],l_width)
+        CALL ui.Interface.frontCall("webcomponent","call",["formonly.c1","getHeight"],l_height)
+        IF l_width < l_height THEN
+            LET m_line_multiplier = 1000 / l_width 
+        ELSE
+            LET m_line_multiplier = 1000 / l_height 
+        END IF
+        
         
         LET l_fill.colour = "rgb(240,240,240)"
         LET l_stroke.colour = "black"
@@ -35,6 +50,7 @@ DEFINE l_background wc_svg.svg_object
             CALL append_canvas_node_to_svg(l_canvas.getChildByIndex(i), l_svg)
         END FOR
         CALL wc_svg.svg_viewBox(l_svg, 0, 0, 1000, 1000)
+        CALL wc_svg.svg_preserveAspectRatio(l_svg, "none","none")
         RETURN l_svg
     ELSE
         RETURN NULL
@@ -65,12 +81,12 @@ DEFINE diameter	        INTEGER
 DEFINE startDegrees	    INTEGER	
 DEFINE extentDegrees	INTEGER	
 DEFINE text	            STRING	
-DEFINE anchor	        CHAR(1)
+DEFINE anchor	        CHAR(2)
 DEFINE fillColor	    STRING	
 DEFINE acceleratorKey1	STRING	
 DEFINE acceleratorKey3	STRING	
 DEFINE radius INTEGER
-
+DEFINE l_just STRING
 DEFINE swap INTEGER
 
     LET l_tagname = l_canvas_node.getTagName()
@@ -126,7 +142,7 @@ DEFINE swap INTEGER
             LET width = l_canvas_node.getAttribute("width")
             LET fillColor = l_canvas_node.getAttribute("fillColor")
             LET l_stroke.colour = fillColor
-            LET l_stroke.width = width
+            LET l_stroke.width = width * m_line_multiplier
             LET l_svg_child = wc_svg.add_line(l_svg, startX, startY, endX, endY, l_stroke.*)
             
         WHEN "CanvasOval"
@@ -192,13 +208,32 @@ DEFINE swap INTEGER
             LET startX = l_canvas_node.getAttribute("startX")
             LET startY = 1000-l_canvas_node.getAttribute("startY")
             LET anchor = l_canvas_node.getAttribute("anchor")
-            LET text = l_canvas_node.getAttribute("text")
+            LET text = html_encode(l_canvas_node.getAttribute("text"))
             LET fillColor = l_canvas_node.getAttribute("fillColor")  
 
-            LET l_stroke.colour = "black"
+            LET l_fill.colour = "black"#fillColor
+            LET l_stroke.colour = "black"#fillColor
             LET l_stroke.width = 1
-            #TODO add transform logic for anchor
-            LET l_svg_child = wc_svg.add_text(l_svg, startX, startY,text,"start",l_fill.*, l_stroke.*, l_font.*) 
+
+            LET l_font.size = 12 * m_line_multiplier
+
+            LET l_just = "start"
+            IF anchor MATCHES "*e*" THEN
+                LET l_just = "end"
+            ELSE
+                IF anchor = "n" OR anchor = "s" THEN
+                    LET l_just = "middle"
+                END IF
+            END IF
+            #TODO add transform logic for vertical anchor
+            IF anchor MATCHES "*n*" THEN
+                LET startY = startY + l_font.size
+            ELSE
+                IF anchor = "e" OR anchor = "w" THEN
+                    LET startY = startY + (l_font.size/2)
+                END IF
+            END IF
+            LET l_svg_child = wc_svg.add_text(l_svg, startX, startY,text,l_just,l_fill.*, l_stroke.*, l_font.*) 
 
     END CASE
     IF l_svg_child IS NOT NULL THEN
@@ -255,6 +290,7 @@ FUNCTION drawInit()
     LET fillColor = "white"
     LET linesAreBlack = 0
     LET lineWidth = 1
+    LET m_line_multiplier =1
 END FUNCTION
 
 #+ Selects a canvas.
@@ -564,8 +600,6 @@ FUNCTION getFglDrawCanvas(canvasName)
     DEFINE i INTEGER
     DEFINE  l_child om.DomNode
 
-    DISPLAY root.toString()
-
     FOR i = 1 TO root.getChildCount()
         LET l_child = root.getChildByIndex(i)
         IF l_child.getAttribute("canvasName") = canvasName THEN
@@ -574,4 +608,16 @@ FUNCTION getFglDrawCanvas(canvasName)
         END IF
     END FOR
     RETURN NULL
+END FUNCTION
+
+PRIVATE FUNCTION html_encode(s)
+DEFINE s STRING
+DEFINE sb base.StringBuffer
+
+    LET sb = base.StringBuffer.create()
+    CALL sb.append(s)
+    CALL sb.replace("&","&amp;",0)
+    CALL sb.replace("<","&lt;",0)
+    CALL sb.replace(">","&gt;",0)
+    RETURN sb.toString()
 END FUNCTION

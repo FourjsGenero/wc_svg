@@ -181,7 +181,6 @@ DEFINE slice svg_object
     LET y2 = cy + ry*util.Math.sin(util.Math.pi()*a2/180)
     LET d= SFMT("M%1,%2 L%3,%4 A%5,%6 0 %9,1 %7,%8 Z",cx,cy,x1,y1,rx,ry,x2,y2,IIF((a2-a1)>180,1,0))
 
-    DISPLAY d
     LET slice = add_path(parent,d,f.*,s.*)
     
     RETURN slice
