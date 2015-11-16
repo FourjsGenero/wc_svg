@@ -5,9 +5,6 @@
 		<meta Http-Equiv="Pragma" content="no-cache"/>
 		<meta Http-Equiv="Expires" content="0"/>
      <script language="JavaScript">
-         // This function is called  when the user click on an area of the map
-         // 
-        
          
          execAction = function(action,val) {
          // Raise an action
@@ -53,8 +50,6 @@
             // Initialize the properties handler ...
             // THis component has no properties so nothing to do 
             gICAPI.onProperty = function(property) {
-               properties = eval('(' + property + ')');
-               document.getElementById("svg").innerHTML=properties.inner_html;
             }
 
             // Called by webcompnent frontcall to alter the HTML of the

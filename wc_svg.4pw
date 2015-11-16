@@ -51,8 +51,11 @@
       <VirtualFolder label="import">
         <File excludeFromLink="true" filePath="wc_svg.4gl"/>
         <File filePath="webcomponents/wc_svg/wc_svg.html"/>
+        <File filePath="wc_svg_canvas.4gl"/>
         <File excludeFromLink="true" filePath="wc_svg_piechart.4gl"/>
       </VirtualFolder>
+      <File filePath="wc_svg_canvas_test.4gl"/>
+      <File filePath="wc_svg_canvas_test.per"/>
       <File filePath="wc_svg_piechart_test.4gl"/>
       <File filePath="wc_svg_piechart_test.per"/>
       <File filePath="wc_svg_test.4gl"/>

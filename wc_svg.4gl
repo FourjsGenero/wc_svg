@@ -39,6 +39,46 @@ DEFINE svg_root svg_object
     RETURN svg_root
 END FUNCTION
 
+FUNCTION svg_position(svg_root,x,y)
+DEFINE svg_root svg_object
+DEFINE x,y INTEGER
+
+    CALL svg_root.setAttribute("x",x)
+    CALL svg_root.setAttribute("y",y)
+END FUNCTION
+
+FUNCTION svg_size(svg_root, width, height)
+DEFINE svg_root svg_object
+DEFINE width, height INTEGER
+
+    CALL svg_root.setAttribUTE("width",width)
+    CALL svg_root.setAttribute("height", height)
+END FUNCTION
+
+FUNCTION svg_viewBox(svg_root, x,y,width, height)
+DEFINE svg_root svg_object
+DEFINE x,y, width, height INTEGER
+    CALL svg_root.setAttribute("viewBox", SFMT("%1 %2 %3 %4", x,y, width, height))
+END FUNCTION
+
+FUNCTION svg_preserveAspectRatio(svg_root, x,y )
+DEFINE svg_root svg_object
+DEFINE x,y STRING
+
+DEFINE s STRING
+
+    LET s= "none"
+    IF x MATCHES "m*" AND y MATCHES "m*" THEN
+        LET s= SFMT("x%1Y%2",x,y)
+    END IF
+    CALL svg_root.setAttribute("preserveAspectRatio", s)
+END FUNCTION
+
+
+
+#viewBox="the points "seen" in this SVG drawing area. 4 values separated by white space or commas. (min x, min y, width, height)"
+#preserveAspectRatio="'none' or any of the 9 combinations of 'xVALYVAL' where VAL is 'min', 'mid' or 'max'. (default xMidYMid)"
+
 FUNCTION add_group(parent)
 DEFINE parent svg_object
 DEFINE g svg_object
@@ -139,8 +179,9 @@ DEFINE slice svg_object
 
     LET x2 = cx + rx*util.Math.cos(util.Math.pi()*a2/180)
     LET y2 = cy + ry*util.Math.sin(util.Math.pi()*a2/180)
-    LET d= SFMT("M%1,%2 L%3,%4 A%5,%6 0 0,1 %7,%8 Z",cx,cy,x1,y1,rx,ry,x2,y2)
+    LET d= SFMT("M%1,%2 L%3,%4 A%5,%6 0 %9,1 %7,%8 Z",cx,cy,x1,y1,rx,ry,x2,y2,IIF((a2-a1)>180,1,0))
 
+    DISPLAY d
     LET slice = add_path(parent,d,f.*,s.*)
     
     RETURN slice
@@ -432,6 +473,10 @@ PRIVATE FUNCTION create_string(n)
 DEFINE n,c om.DomNode
 DEFINE sb base.StringBuffer
 DEFINE i INTEGER
+
+    IF n IS NULL THEN
+        RETURN NULL
+    END IF
 
     LET sb = base.StringBuffer.create()
     CALL sb.append("<")

@@ -41,7 +41,7 @@ FUNCTION draw_pie()
     CALL wc_svg_piechart.init()
     LET wc_svg_piechart.x = 100
     LET wc_svg_piechart.y = 100
-    LET wc_svg_piechart.rx = 50
+    LET wc_svg_piechart.rx = 100
     LET wc_svg_piechart.ry = 50
 
     LET wc_svg_piechart.title.text = "Example Pie"

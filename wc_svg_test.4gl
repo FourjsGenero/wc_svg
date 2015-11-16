@@ -1,5 +1,8 @@
 IMPORT FGL wc_svg
 
+
+IMPORT FGL wc_svg_canvas
+
 DEFINE svg_root, grp, child wc_svg.svg_object
 
 DEFINE fill wc_svg.fillType
@@ -10,12 +13,16 @@ DEFINE transform wc_svg.transformType
 
 MAIN
 DEFINE svg_test STRING
+
+    CLOSE WINDOW SCREEN
+
+    CALL test_wc_svg_canvas()
+    RETURN
+
     OPEN WINDOW w WITH FORM "wc_svg_test"
-
-
+    
     --CALL svg_html.append('<text x="200" y="175" >ABC<animateMotion path="M 0 0 L 100 100" dur="5s" fill="freeze"/></text>')
 
-   
     INPUT BY NAME svg_test ATTRIBUTES(WITHOUT DEFAULTS=TRUE, UNBUFFERED)
         BEFORE INPUT
             LET svg_root = wc_svg.init()
@@ -152,6 +159,9 @@ DEFINE svg_test STRING
             CALL wc_svg.add_scale(child,0.5,2,120,360)
             CALL wc_svg.add_rotate(child,-45,120,360)
 
+
+          
+
             
             CALL wc_svg.draw("formonly.svg_test", svg_root)
 
@@ -167,6 +177,9 @@ DEFINE svg_test STRING
 
         ON ACTION pie_chart
             CALL pie_test()
+
+        ON ACTION canvas_chart
+            CALL test_wc_svg_canvas()
     END INPUT
 END MAIN
 
