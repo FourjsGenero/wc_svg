@@ -16,9 +16,6 @@ DEFINE svg_test STRING
 
     CLOSE WINDOW SCREEN
 
-    CALL test_wc_svg_canvas()
-    RETURN
-
     OPEN WINDOW w WITH FORM "wc_svg_test"
     
     --CALL svg_html.append('<text x="200" y="175" >ABC<animateMotion path="M 0 0 L 100 100" dur="5s" fill="freeze"/></text>')

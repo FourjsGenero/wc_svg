@@ -211,8 +211,8 @@ DEFINE swap INTEGER
             LET text = html_encode(l_canvas_node.getAttribute("text"))
             LET fillColor = l_canvas_node.getAttribute("fillColor")  
 
-            LET l_fill.colour = "black"#fillColor
-            LET l_stroke.colour = "black"#fillColor
+            LET l_fill.colour = fillColor
+            LET l_stroke.colour = fillColor
             LET l_stroke.width = 1
 
             LET l_font.size = 12 * m_line_multiplier
@@ -225,7 +225,7 @@ DEFINE swap INTEGER
                     LET l_just = "middle"
                 END IF
             END IF
-            #TODO add transform logic for vertical anchor
+            
             IF anchor MATCHES "*n*" THEN
                 LET startY = startY + l_font.size
             ELSE
@@ -610,7 +610,9 @@ FUNCTION getFglDrawCanvas(canvasName)
     RETURN NULL
 END FUNCTION
 
-PRIVATE FUNCTION html_encode(s)
+
+
+PRIVATE FUNCTION html_encode(s) -- this should be in util.strings
 DEFINE s STRING
 DEFINE sb base.StringBuffer
 
