@@ -1,23 +1,102 @@
 LAYOUT
-VBOX
+VBOX (SPLITTER)
 GRID
 {
-[f01               ]
+[w01               ]
 [                  ]
 [                  ]
 [                  ]
-<T                 >
- [c01     |c02    ]
- [c01     |c02    ]
- [c01     |c02    ]
+}
+END
+FOLDER
+PAGE (TEXT="Pie")
+GRID
+{
+<G g_chart                                                                   >
+ X            [f01       ] Y            [f02       ]
+ Radius (X)   [f03       ] Radius (Y)   [f04       ]
+ Key Column   [f05       ]
+ Value Column [f06       ]
+ Colour Column[f07       ]
+ 
+<G g_title                                                                   >
+ Text         [f11                                                          ]
+ X            [f12       ] Y            [f13       ]
+ Justify      [f14       ]
+ Font         [f15                                                          ]
+
+<G g_legend                                                                  >
+ Text         [f21                                                          ]
+ X            [f22       ] Y            [f23       ]
+ Justify      [f24       ]
+ Font         [f25                                                          ]
 }
 END
 END
+PAGE (TEXT="Data")
+TABLE
+{
+ [c01     |c02    |c03    |c04    ]
+ [c01     |c02    |c03    |c04    ]
+ [c01     |c02    |c03    |c04    ]
+}
+END
+END
+END
+END
+END
 ATTRIBUTES
-WEBCOMPONENT f01 = formonly.pie_chart, COMPONENTTYPE="wc_svg";
+WEBCOMPONENT w01 = formonly.pie_chart, COMPONENTTYPE="wc_svg";
 c01 = formonly.major;
-c02 = formonly.qty, JUSTIFY=RIGHT;
-PHANTOM formonly.colour;
+c02 = formonly.qty1, JUSTIFY=RIGHT;
+c03 = formonly.qty2, JUSTIFY=RIGHT;
+c04 = formonly.colour;
+
+GROUP g_chart: TEXT="Chart";
+SPINEDIT f01 = formonly.x;
+SPINEDIT f02 = formonly.y;
+SPINEDIT f03 = formonly.rx;
+SPINEDIT f04 = formonly.ry;
+
+COMBOBOX f05 = formonly.key_column; 
+COMBOBOX f06 = formonly.value_column; 
+COMBOBOX f07 = formonly.colour_column; 
+
+GROUP g_title: TEXT="Title";
+EDIT f11 = formonly.title_text, SCROLL;
+SPINEDIT f12 = formonly.title_x;
+SPINEDIT f13 = formonly.title_y;
+COMBOBOX f14 = formonly.title_justify, ITEMS=("start","middle","end");
+BUTTONEDIT f15 = formonly.title_font, NOTEDITABLE, SCROLL, ACTION=font;
+
+GROUP g_legend: TEXT="Legend";
+EDIT f21 = formonly.legend_title_text, SCROLL;
+SPINEDIT f22 = formonly.legend_title_x;
+SPINEDIT f23 = formonly.legend_title_y;
+COMBOBOX f24 = formonly.legend_title_justify, ITEMS=("start","middle","end");
+BUTTONEDIT f25 = formonly.legend_title_font, NOTEDITABLE, SCROLL, ACTION=font;
 
 INSTRUCTIONS
-SCREEN RECORD scr(major, qty, colour);
+SCREEN RECORD scr(major, qty1, qty2, colour);
+
+
+
+
+    --title RECORD
+        --text STRING,
+        --x,y INTEGER,
+        --justify STRING,
+        --fill wc_svg.fillType,
+        --stroke wc_svg.strokeType,
+        --font wc_svg.fontType
+    --END RECORD,
+    --legend RECORD
+        --title RECORD
+            --text STRING,
+            --x,y INTEGER,
+            --justify STRING,
+            --fill wc_svg.fillType,
+            --stroke wc_svg.strokeType,
+            --font wc_svg.fontType
+        --END RECORD
+    --END RECORD,

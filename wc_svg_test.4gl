@@ -182,5 +182,20 @@ END MAIN
 
 
 
+FUNCTION combobox_column_list(cb,root)
+DEFINE cb ui.ComboBox
+DEFINE root, rec, field om.DomNode
+DEFINE i INTEGER
+
+    CALL cb.clear()
+    LET rec = root.getFirstChild()
+    FOR i = 1 TO rec.getChildCount()
+        LET field = rec.getChildByIndex(i)
+        CALL cb.addItem(field.getAttribute("name"), field.getAttribute("name"))
+    END FOR
+END FUNCTION
+
+
+
 
 

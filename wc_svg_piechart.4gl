@@ -1,6 +1,6 @@
 IMPORT FGL wc_svg
 
-PUBLIC DEFINE 
+PUBLIC TYPE pieChartType RECORD
     x,y INTEGER,
     rx, ry INTEGER,
     title RECORD
@@ -25,21 +25,22 @@ PUBLIC DEFINE
     key_column STRING,
     value_column STRING,
     colour_column STRING
+END RECORD
 
 
 
-FUNCTION init()
-    INITIALIZE x,y,rx,ry,title.*,legend.* TO NULL
+FUNCTION init(p)
+DEFINE p pieChartType
+    INITIALIZE p.* TO NULL
 END FUNCTION
  
     
     
 
 
-FUNCTION draw(fieldname)
+FUNCTION draw(fieldname, p)
 DEFINE fieldname STRING
-
-
+DEFINE p pieChartType
 
 DEFINE value, total FLOAT
 DEFINE angle_total, angle_current FLOAT
@@ -56,33 +57,33 @@ DEFINE stroke wc_svg.strokeType
 
     -- Calculate Total
     LET total = 0.0
-    FOR i = 1 TO data.getChildCount()
-        LET rec = data.getChildByIndex(i)
-        LET value = get_field_value(rec,value_column)
+    FOR i = 1 TO p.data.getChildCount()
+        LET rec = p.data.getChildByIndex(i)
+        LET value = get_field_value(rec,p.value_column)
         LET total = total + nvl(value,0)
     END FOR
 
 
     -- Draw each slice
     LET angle_total = 0.0
-    FOR i = 1 TO data.getChildCount()
-        LET rec = data.getChildByIndex(i)
-        LET value = get_field_value(rec,value_column)
+    FOR i = 1 TO p.data.getChildCount()
+        LET rec = p.data.getChildByIndex(i)
+        LET value = get_field_value(rec,p.value_column)
 
         LET angle_current = value / total * 360.0
-        LET fill.colour = get_field_value(rec,colour_column)
-        LET slice = wc_svg.add_slice(svg_root,x,y,rx,ry,angle_total,(angle_total+angle_current),fill.*, stroke.*)
+        LET fill.colour = get_field_value(rec,p.colour_column)
+        LET slice = wc_svg.add_slice(svg_root,p.x,p.y,p.rx,p.ry,angle_total,(angle_total+angle_current),fill.*, stroke.*)
         LET angle_total = angle_total + angle_current
     END FOR
 
     -- Draw Title
-    IF title.text IS NOT NULL THEN
-        LET child = wc_svg.add_text(svg_root,title.x, title.y,title.text, title.justify, title.fill.*, title.stroke.*, title.font.*)
+    IF p.title.text IS NOT NULL THEN
+        LET child = wc_svg.add_text(svg_root,p.title.x, p.title.y, p.title.text, p.title.justify, p.title.fill.*, p.title.stroke.*, p.title.font.*)
     END IF
 
     -- Draw Legend Title
-    IF legend.title.text IS NOT NULL THEN
-        LET child = wc_svg.add_text(svg_root,legend.title.x, legend.title.y,legend.title.text, legend.title.justify, legend.title.fill.*, legend.title.stroke.*, legend.title.font.*)
+    IF p.legend.title.text IS NOT NULL THEN
+        LET child = wc_svg.add_text(svg_root, p.legend.title.x, p.legend.title.y, p.legend.title.text, p.legend.title.justify, p.legend.title.fill.*, p.legend.title.stroke.*, p.legend.title.font.*)
     END IF
 
     CALL wc_svg.draw(fieldname, svg_root)
@@ -119,8 +120,3 @@ DEFINE fld om.DomNode
     END IF
     RETURN value
 END FUNCTION
-    
-
-    
-
-
