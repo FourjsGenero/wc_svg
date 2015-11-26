@@ -19,7 +19,15 @@ PUBLIC TYPE pieChartType RECORD
             fill wc_svg.fillType,
             stroke wc_svg.strokeType,
             font wc_svg.fontType
-        END RECORD
+        END RECORD,
+        x,y INTEGER,
+        width, height INTEGER,
+        format STRING,
+        value_format STRING,
+        perc_format STRING,
+        fill wc_svg.fillType,
+        stroke wc_svg.strokeType,
+        font wc_svg.fontType
     END RECORD,
     data om.DomNode,
     key_column STRING,
@@ -42,8 +50,9 @@ FUNCTION draw(fieldname, p)
 DEFINE fieldname STRING
 DEFINE p pieChartType
 
-DEFINE value, total FLOAT
+DEFINE value, perc, total FLOAT
 DEFINE angle_total, angle_current FLOAT
+DEFINE lbl STRING
 
 DEFINE rec om.DomNode
 
@@ -52,6 +61,8 @@ DEFINE i INTEGER
 
 DEFINE fill wc_svg.fillType
 DEFINE stroke wc_svg.strokeType
+
+
 
     LET svg_root = wc_svg.init()
 
@@ -85,6 +96,19 @@ DEFINE stroke wc_svg.strokeType
     IF p.legend.title.text IS NOT NULL THEN
         LET child = wc_svg.add_text(svg_root, p.legend.title.x, p.legend.title.y, p.legend.title.text, p.legend.title.justify, p.legend.title.fill.*, p.legend.title.stroke.*, p.legend.title.font.*)
     END IF
+
+    -- Draw Legend Text
+    FOR i = 1 TO p.data.getChildCount()
+        LET rec = p.data.getChildByIndex(i)
+        LET value = get_field_value(rec,p.value_column)
+        LET perc = 100*value/total
+        LET lbl = get_field_value(rec,p.key_column)
+        LET lbl = SFMT(nvl(p.legend.format,"%1"),lbl, value USING nvl(p.legend.value_format,"<<<<<<<<<<<<&"), perc USING nvl(p.legend.perc_format,"##&.&"))
+        LET fill.colour = get_field_value(rec,p.colour_column)
+
+        LET child = wc_svg.add_rect(svg_root, p.legend.x, p.legend.y+(i*p.legend.height*1.5)-p.legend.height, p.legend.width, p.legend.height, fill.*, stroke.*) 
+        LET child = wc_svg.add_text(svg_root, p.legend.x+p.legend.width*1.5, p.legend.y+(i*p.legend.height*1.5), lbl, "start", p.legend.fill.*, p.legend.stroke.*, p.legend.font.*) 
+    END FOR
 
     CALL wc_svg.draw(fieldname, svg_root)
 

@@ -1,0 +1,24 @@
+LAYOUT
+GRID
+{
+Colour     [f01       ]
+Width      [f02       ]
+LineCap    [f03       ]
+LineJoin   [f04       ]
+MiterLimit [f05       ]
+DashArray  [f06       ]
+DashOffset [f07       ]
+Opacity    [f08       ]
+}
+END
+END
+ATTRIBUTES
+f01 = formonly.colour;
+SPINEDIT f02 = formonly.WIDTH;
+COMBOBOX f03 = formonly.linecap, ITEMS=("Butt","Round","Square");
+COMBOBOX f04 = formonly.linejoin, ITEMS=("Miter","Round","Bevel");
+SPINEDIT f05 = formonly.miterlimit;
+EDIT f06 = formonly.dasharray;
+EDIT f07 = formonly.dashoffset;
+EDIT f08 = formonly.opacity;
+

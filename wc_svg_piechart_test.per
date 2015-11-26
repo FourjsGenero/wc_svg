@@ -24,12 +24,31 @@ GRID
  X            [f12       ] Y            [f13       ]
  Justify      [f14       ]
  Font         [f15                                                          ]
-
-<G g_legend                                                                  >
+ Stroke       [f16                                                          ]
+ Fill         [f17                                                          ]
+}
+END
+END
+PAGE (TEXT="Legend")
+GRID
+{
+<G g_legend_title                                                            >
  Text         [f21                                                          ]
  X            [f22       ] Y            [f23       ]
  Justify      [f24       ]
  Font         [f25                                                          ]
+ Stroke       [f26                                                          ]
+ Fill         [f27                                                          ]
+
+<g g_legend                                                                  >
+ X            [f31       ] Y            [f32       ]
+ Width        [f33       ] Height       [f34       ]
+ Format       [f35       ] %1-Label, %2-Value, %3-Percent Default=%1
+ Value Format [f36                                                          ]
+ Perc Format  [f37                                                          ]
+ Font         [f38                                                          ]
+ Stroke       [f39                                                          ]
+ Fill         [f40                                                          ]
 }
 END
 END
@@ -47,10 +66,10 @@ END
 END
 ATTRIBUTES
 WEBCOMPONENT w01 = formonly.pie_chart, COMPONENTTYPE="wc_svg";
-c01 = formonly.major;
-c02 = formonly.qty1, JUSTIFY=RIGHT;
-c03 = formonly.qty2, JUSTIFY=RIGHT;
-c04 = formonly.colour;
+c01 = formonly.KEY, TITLE="Key";
+c02 = formonly.qty1, JUSTIFY=RIGHT, TITLE="Qty1";
+c03 = formonly.qty2, JUSTIFY=RIGHT, TITLE="Qty2";
+c04 = formonly.colour, TITLE="Colour";
 
 GROUP g_chart: TEXT="Chart";
 SPINEDIT f01 = formonly.x;
@@ -68,35 +87,30 @@ SPINEDIT f12 = formonly.title_x;
 SPINEDIT f13 = formonly.title_y;
 COMBOBOX f14 = formonly.title_justify, ITEMS=("start","middle","end");
 BUTTONEDIT f15 = formonly.title_font, NOTEDITABLE, SCROLL, ACTION=font;
+BUTTONEDIT f16 = formonly.title_stroke, NOTEDITABLE, SCROLL, ACTION=stroke;
+BUTTONEDIT f17 = formonly.title_fill, NOTEDITABLE, SCROLL, ACTION=fill;
 
-GROUP g_legend: TEXT="Legend";
+GROUP g_legend_title: TEXT="Legend Title";
 EDIT f21 = formonly.legend_title_text, SCROLL;
 SPINEDIT f22 = formonly.legend_title_x;
 SPINEDIT f23 = formonly.legend_title_y;
 COMBOBOX f24 = formonly.legend_title_justify, ITEMS=("start","middle","end");
 BUTTONEDIT f25 = formonly.legend_title_font, NOTEDITABLE, SCROLL, ACTION=font;
+BUTTONEDIT f26 = formonly.legend_title_stroke, NOTEDITABLE, SCROLL, ACTION=stroke;
+BUTTONEDIT f27 = formonly.legend_title_fill, NOTEDITABLE, SCROLL, ACTION=fill;
+
+GROUP g_legend: TEXT="Legend";
+SPINEDIT f31 = formonly.legend_x;
+SPINEDIT f32 = formonly.legend_y;
+SPINEDIT f33 = formonly.legend_width;
+SPINEDIT f34 = formonly.legend_height;
+EDIT f35 = formonly.legend_format;
+EDIT f36 = formonly.legend_value_format;
+EDIT f37 = formonly.legend_perc_format;
+BUTTONEDIT f38 = formonly.legend_font, NOTEDITABLE, SCROLL, ACTION=font;
+BUTTONEDIT f39 = formonly.legend_stroke, NOTEDITABLE, SCROLL, ACTION=stroke;
+BUTTONEDIT f40 = formonly.legend_fill, NOTEDITABLE, SCROLL, ACTION=fill;
+
 
 INSTRUCTIONS
-SCREEN RECORD scr(major, qty1, qty2, colour);
-
-
-
-
-    --title RECORD
-        --text STRING,
-        --x,y INTEGER,
-        --justify STRING,
-        --fill wc_svg.fillType,
-        --stroke wc_svg.strokeType,
-        --font wc_svg.fontType
-    --END RECORD,
-    --legend RECORD
-        --title RECORD
-            --text STRING,
-            --x,y INTEGER,
-            --justify STRING,
-            --fill wc_svg.fillType,
-            --stroke wc_svg.strokeType,
-            --font wc_svg.fontType
-        --END RECORD
-    --END RECORD,
+SCREEN RECORD scr(key, qty1, qty2, colour);
