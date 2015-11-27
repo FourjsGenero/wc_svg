@@ -169,7 +169,7 @@ DEFINE f fillType
 DEFINE s strokeType
 
 DEFINE d STRING
-DEFINE x1,y1,x2,y2 INTEGER
+DEFINE x1,y1,x2,y2 FLOAT
 
 DEFINE slice svg_object
 
@@ -184,6 +184,67 @@ DEFINE slice svg_object
     LET slice = add_path(parent,d,f.*,s.*)
     
     RETURN slice
+END FUNCTION
+
+FUNCTION add_arc(parent, cx,cy, rx, ry, a1, a2,f,s)
+DEFINE parent svg_object
+DEFINE cx,cy,rx, ry INTEGER
+DEFINE a1, a2 FLOAT
+DEFINE f fillType
+DEFINE s strokeType
+
+DEFINE d STRING
+DEFINE x1,y1,x2,y2 FLOAT
+
+DEFINE slice svg_object
+
+    #M x,y L x,y Arx,ry 0 0,1  "Z" 
+    LET x1 = cx + rx*util.Math.cos(util.Math.pi()*a1/180)
+    LET y1 = cy + ry*util.Math.sin(util.Math.pi()*a1/180)
+
+    LET x2 = cx + rx*util.Math.cos(util.Math.pi()*a2/180)
+    LET y2 = cy + ry*util.Math.sin(util.Math.pi()*a2/180)
+    LET d= SFMT("M%3,%4 A%5,%6 0 %9,1 %7,%8",cx,cy,x1,y1,rx,ry,x2,y2,IIF((a2-a1)>180,1,0))
+
+    LET slice = add_path(parent,d,f.*,s.*)
+    
+    RETURN slice
+END FUNCTION
+
+FUNCTION add_donut(parent, cx,cy, rx1, ry1, rx2, ry2, a1, a2,f,s)
+DEFINE parent svg_object
+DEFINE cx,cy,rx1, ry1, rx2, ry2 INTEGER
+DEFINE a1, a2 FLOAT
+DEFINE f fillType
+DEFINE s strokeType
+
+DEFINE d STRING
+DEFINE x1,y1,x2,y2, x3, y3, x4, y4 FLOAT
+
+DEFINE slice svg_object
+
+    LET x1 = cx + rx1*util.Math.cos(util.Math.pi()*a1/180)
+    LET y1 = cy + ry1*util.Math.sin(util.Math.pi()*a1/180)
+
+    LET x2 = cx + rx1*util.Math.cos(util.Math.pi()*a2/180)
+    LET y2 = cy + ry1*util.Math.sin(util.Math.pi()*a2/180)
+
+    LET x3 = cx + rx2*util.Math.cos(util.Math.pi()*a2/180)
+    LET y3 = cy + ry2*util.Math.sin(util.Math.pi()*a2/180)
+
+    LET x4 = cx + rx2*util.Math.cos(util.Math.pi()*a1/180)
+    LET y4 = cy + ry2*util.Math.sin(util.Math.pi()*a1/180)
+
+    #LET d= SFMT("M%1,%2 L%3,%4 A%5,%6 0 %9,1 %7,%8 Z",cx,cy,x1,y1,rx,ry,x2,y2,IIF((a2-a1)>180,1,0))
+
+    LET d = SFMT("M%7,%8 L%1,%2 A%9,%10 0 %13,1 %3,%4 L%5,%6 A%11,%12 0 %13,0 %7,%8", x1,y1,x2,y2,x3,y3,x4,y4,rx1,ry1,rx2,ry2,IIF((a2-a1)>180,1,0))
+    
+    LET slice = add_path(parent,d,f.*,s.*)
+    
+    RETURN slice
+
+
+
 END FUNCTION
 
 FUNCTION add_polygon(parent, points, f, s)

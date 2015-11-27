@@ -175,6 +175,9 @@ DEFINE svg_test STRING
         ON ACTION pie_chart
             CALL pie_test()
 
+        ON ACTION gauge_chart
+            CALL gauge_test()
+
         ON ACTION canvas_chart
             CALL test_wc_svg_canvas()
     END INPUT

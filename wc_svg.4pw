@@ -56,12 +56,15 @@
         <File filePath="wc_svg_fill_dialog.per"/>
         <File excludeFromLink="true" filePath="wc_svg_font_dialog.4gl"/>
         <File filePath="wc_svg_font_dialog.per"/>
+        <File excludeFromLink="true" filePath="wc_svg_gauge.4gl"/>
         <File excludeFromLink="true" filePath="wc_svg_piechart.4gl"/>
         <File excludeFromLink="true" filePath="wc_svg_stroke_dialog.4gl"/>
         <File filePath="wc_svg_stroke_dialog.per"/>
       </VirtualFolder>
       <File filePath="wc_svg_canvas_test.4gl"/>
       <File filePath="wc_svg_canvas_test.per"/>
+      <File filePath="wc_svg_gauge_test.4gl"/>
+      <File filePath="wc_svg_gauge_test.per"/>
       <File filePath="wc_svg_piechart_test.4gl"/>
       <File filePath="wc_svg_piechart_test.per"/>
       <File filePath="wc_svg_test.4gl"/>
