@@ -15,6 +15,7 @@ MAIN
 DEFINE svg_test STRING
 
     CLOSE WINDOW SCREEN
+    CALL ui.Interface.loadStyles("wc_svg_test.4st")
 
     OPEN WINDOW w WITH FORM "wc_svg_test"
     
