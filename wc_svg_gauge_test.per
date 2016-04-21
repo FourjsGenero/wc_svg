@@ -5,8 +5,10 @@ GRID
 [                  ]
 [                  ]
 [                  ]
+[s01               ]
 }
 END
 END
 ATTRIBUTES
-WEBCOMPONENT w01 = formonly.gauge_chart, COMPONENTTYPE="wc_svg";
+WEBCOMPONENT w01 = formonly.gauge_chart, STRETCH=BOTH, COMPONENTTYPE="wc_svg";
+SLIDER s01 = formonly.gauge_value, VALUEMIN=0, VALUEMAX=100, NOT NULL;

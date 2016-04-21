@@ -4,10 +4,11 @@ DEFINE g wc_svg_gauge.gaugeType
 
 FUNCTION gauge_test()
 DEFINE gauge_chart STRING
+DEFINE gauge_value INTEGER
 
     OPEN WINDOW gauge_test WITH FORM "wc_svg_gauge_test"
     CALL wc_svg_gauge.init() RETURNING g.*
-    LET g.title.text = "Gauge Text"
+    LET g.title.text = "Capacity (%)"
     LET g.title.fill.colour = "black"
     LET g.title.font.size = 18
     LET g.title.x = 200
@@ -23,7 +24,7 @@ DEFINE gauge_chart STRING
     LET g.arc_start = 135
     LET g.arc_end = 405
 
-    LET g.value.text = 25
+    LET g.value.text = 72
     LET g.value.fill.colour = "black"
     LET g.value.font.size = 18
     LET g.value.x = 200
@@ -55,11 +56,19 @@ DEFINE gauge_chart STRING
  
 
     DIALOG ATTRIBUTES(UNBUFFERED)
-        INPUT BY NAME gauge_chart ATTRIBUTES(WITHOUT DEFAULTS=TRUE)
+        INPUT BY NAME gauge_chart, gauge_value ATTRIBUTES(WITHOUT DEFAULTS=TRUE)
+
+            ON CHANGE gauge_value
+                LET g.value.text = gauge_value
+                CALL wc_svg_gauge.draw("formonly.gauge_chart", g.*)
         END INPUT
         
         BEFORE DIALOG
+            LET gauge_value = g.value.text
             CALL wc_svg_gauge.draw("formonly.gauge_chart", g.*)
+            
+
+
 
         ON ACTION close
             EXIT DIALOG
