@@ -9,4 +9,6 @@ There is a lot of potential of things you can do with the fglsvgcanvas Web Compo
 # wc_svg
 A WebComponent for the display of svg images
 
+    (Small change to update language associated with repository)
+
 
